@@ -1,0 +1,32 @@
+import express from 'express';
+import dotenv from 'dotenv';
+import { connectDB } from './config/db';
+import authRoutes from './routes/auth.routes';
+import clientRoutes from './routes/client.routes';
+import { errorHandler } from './middleware/errorHandler';
+import cors from 'cors';
+import { initializeAdminUser } from './utils/adminInit';
+
+dotenv.config();
+const app = express();
+
+// Middleware
+app.use(express.json());
+
+// Routes
+app.use('/api/auth', authRoutes);
+app.use('/api/client', clientRoutes);
+
+// Error handling middleware
+app.use(errorHandler);
+
+const PORT = process.env.PORT || 5000;
+
+connectDB().then(async () => {
+  // Initialize admin user after DB connection is established
+  await initializeAdminUser();
+  
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+});

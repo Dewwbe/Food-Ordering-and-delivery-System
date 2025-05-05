@@ -1,0 +1,12 @@
+# Docker Compose file to define an application with a MySQL database
+
+version: '3.8'
+
+services:
+  # Your application service
+  server:
+    build:
+      context: .
+    ports:
+      - "8083:8083"
+
